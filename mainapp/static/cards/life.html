@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Быт</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #F4E6D3 0%, #886ea3 100%);
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #4b326e;
+    }
+    img.img-fluid {
+      max-width: 1500px;
+      max-height: 2000px;
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(136, 110, 163, 0.4);
+    }
+    nav.navbar {
+      background-color: #886ea3 !important;
+      box-shadow: 0 2px 10px rgba(136, 110, 163, 0.5);
+    }
+    nav.navbar .navbar-brand,
+    nav.navbar .navbar-nav .nav-link,
+    nav.navbar .btn {
+      color: #F4E6D3 !important;
+      font-weight: 600;
+    }
+    nav.navbar .btn-outline-primary {
+      color: #F4E6D3 !important;
+      border-color: #886ea3 !important;
+      font-weight: 600;
+    }
+    nav.navbar .btn-outline-primary:hover {
+      background-color: #7d5da7 !important;
+      border-color: #7d5da7 !important;
+      color: #F4E6D3 !important;
+    }
+    nav.navbar .btn-primary,
+    nav.navbar .btn-success {
+      background-color: #886ea3 !important;
+      border-color: #886ea3 !important;
+      color: #F4E6D3 !important;
+      font-weight: 700;
+    }
+    nav.navbar .btn-primary:hover,
+    nav.navbar .btn-success:hover {
+      background-color: #6a4e8d !important;
+      border-color: #6a4e8d !important;
+      color: #F4E6D3 !important;
+    }
+    .accordion-button {
+      width: 100%;
+      text-align: left;
+      background-color: #7D6E93;
+      color: #F4E6D3;
+      border: none;
+      padding: 1.25rem 1rem;
+      font-size: 1.25rem;
+      border-radius: 0.375rem;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .accordion-button:not(.collapsed) {
+      background-color: #886ea3;
+      color: #F4E6D3;
+      box-shadow: none;
+    }
+    .accordion-button:hover {
+      background-color: #886ea3;
+      color: #F4E6D3;
+    }
+    .accordion-item {
+      margin-bottom: 2rem;
+      transition: background-color 0.3s ease;
+    }
+    .accordion-item.completed .accordion-button {
+      text-decoration: line-through;
+      background-color: #6a5480 !important;
+      color: #dcd6f7 !important;
+    }
+    .accordion-item.completed .progress-bar {
+      width: 100% !important;
+      background-color: #4caf50 !important;
+    }
+    .drag-handle-accordion {
+      color: #F4E6D3;
+      font-size: 1.5rem;
+      cursor: grab;
+      user-select: none;
+    }
+    .accordion-body {
+      padding: 2rem 1rem 3rem 1rem;
+    }
+    .todo-list {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+    .todo-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 1rem;
+      color: #4a4a4a;
+      user-select: none;
+    }
+    .todo-list li:last-child {
+      border-bottom: none;
+    }
+    .todo-list li.completed label {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .todo-icon {
+      margin-left: auto;
+      color: #8b176e;
+      display: none;
+      font-size: 1.25rem;
+      user-select: none;
+    }
+    .todo-list li.completed .todo-icon,
+    .todo-list input[type="checkbox"]:checked + label + .todo-icon {
+      display: inline;
+    }
+    .todo-list input[type="checkbox"] {
+      display: none;
+    }
+    .todo-list label {
+      cursor: pointer;
+      user-select: none;
+      flex-grow: 1;
+    }
+    .drag-handle-task {
+      color: #7D6E93;
+      font-size: 1.25rem;
+      cursor: grab;
+      user-select: none;
+    }
+    .task-done-button {
+      margin-left: 0.5rem;
+      color: #7D6E93;
+      background: none;
+      border: 1px solid #7D6E93;
+      padding: 0.1rem 0.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 0.875rem;
+    }
+    .task-done-button:hover {
+      background-color: #886ea3;
+      color: #F4E6D3;
+      border-color: #886ea3;
+    }
+    .task-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 0.5rem;
+      user-select: none;
+      color: #7D6E93;
+      cursor: pointer;
+    }
+    .task-controls:hover {
+      color: #886ea3;
+    }
+    .edit-input {
+      flex-grow: 1;
+      font-size: 1rem;
+      padding: 0.2rem 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 0.25rem;
+    }
+    .add-task-form {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .add-task-form input[type="text"] {
+      flex-grow: 1;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 0.375rem;
+    }
+    .add-task-form button {
+      white-space: nowrap;
+    }
+    .progress-bar {
+      transition: width 0.6s ease;
+    }
+    .minimal-accordion-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+    }
+    .btn-delete-accordion {
+      background: transparent;
+      border: none;
+      color: #f4e6d3;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 6px;
+      user-select: none;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .btn-delete-accordion:hover {
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">Vivro</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Переключить навигацию"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-3">
+          <li>
+            <button class="btn btn-success" type="button" id="btnAddTaskNav" title="Добавить задачу">Добавить задачу</button>
+          </li>
+<li><button class="btn btn-outline-primary" type="button" onclick="window.location.href='/users/register/'">Регистрация</button></li>
+<li><button class="btn btn-primary" type="button" onclick="window.location.href='/users/login/'">Вход</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="flex-grow-1 d-flex flex-column justify-content-center align-items-center my-5 container" style="max-width:1500px; width:100%;">
+    <img src="http://127.0.0.1:8000/static/images/life.png" class="img-fluid mb-4" alt="Центральное изображение" />
+    <div class="accordion w-100" id="accordionExample"></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function initSortableAccordion() {
+      if (window.accordionSortable) {
+        window.accordionSortable.destroy();
+      }
+      window.accordionSortable = Sortable.create(document.getElementById('accordionExample'), {
+        handle: '.drag-handle-accordion',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+      });
+    }
+    function updateProgressBar(accordionItem) {
+      const todoList = accordionItem.querySelector('.todo-list');
+      const progressBar = accordionItem.querySelector('.progress-bar');
+      if (!todoList || !progressBar) return;
+      const tasks = todoList.querySelectorAll('li');
+      if (tasks.length === 0) {
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+        return;
+      }
+      const completedTasks = todoList.querySelectorAll('li.completed').length;
+      if (accordionItem.classList.contains('completed')) {
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+      } else {
+        const percent = Math.round((completedTasks / tasks.length) * 100);
+        progressBar.style.width = percent + '%';
+        progressBar.textContent = percent + '%';
+      }
+    }
+    function updateAllProgressBars() {
+      document.querySelectorAll('.accordion-item').forEach(updateProgressBar);
+    }
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('edit-task')) {
+        const li = e.target.closest('li');
+        const label = li.querySelector('label');
+        if (li.querySelector('input.edit-input')) return;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = label.textContent;
+        input.className = 'edit-input form-control';
+        li.replaceChild(input, label);
+        input.focus();
+        const saveEdit = () => {
+          const newVal = input.value.trim();
+          if (newVal === '') {
+            input.focus();
+            return;
+          }
+          const newLabel = document.createElement('label');
+          newLabel.htmlFor = label.htmlFor;
+          newLabel.textContent = newVal;
+          newLabel.className = 'mb-0 flex-grow-1 ms-2';
+          li.replaceChild(newLabel, input);
+        };
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter') input.blur();
+          else if (evt.key === 'Escape') li.replaceChild(label, input);
+        });
+      } else if (e.target.classList.contains('delete-task')) {
+        const li = e.target.closest('li');
+        li.remove();
+        updateAllProgressBars();
+      } else if (e.target.classList.contains('task-done-button')) {
+        const li = e.target.closest('li');
+        toggleTaskDone(li);
+      } else if (e.target.closest('.btn-delete-accordion')) {
+        e.preventDefault();
+        const btn = e.target.closest('.btn-delete-accordion');
+        const accordionItem = btn.closest('.accordion-item');
+        if (accordionItem) {
+          accordionItem.remove();
+        }
+      }
+    });
+    document.getElementById('accordionExample').addEventListener('change', (e) => {
+      if (e.target.classList.contains('minimal-accordion-checkbox')) {
+        const button = e.target.closest('button.accordion-button');
+        if (!button) return;
+        const accordionItem = button.closest('.accordion-item');
+        if (!accordionItem) return;
+        if (e.target.checked) {
+          accordionItem.classList.add('completed');
+          const progressBar = accordionItem.querySelector('.progress-bar');
+          if (progressBar) {
+            progressBar.style.width = '100%';
+            progressBar.textContent = '100%';
+          }
+          const tasks = accordionItem.querySelectorAll('.todo-list li');
+          tasks.forEach(li => {
+            li.classList.add('completed');
+            const cb = li.querySelector('input[type=checkbox]');
+            if (cb) cb.checked = true;
+          });
+        } else {
+          accordionItem.classList.remove('completed');
+          updateProgressBar(accordionItem);
+        }
+      }
+    });
+    document.querySelectorAll('.todo-list').forEach(list => {
+      list.addEventListener('change', (e) => {
+        if (e.target.type === 'checkbox') {
+          const li = e.target.closest('li');
+          toggleTaskDone(li, e.target.checked);
+        }
+      });
+    });
+    function toggleTaskDone(li, checked) {
+      if (checked === undefined) {
+        checked = !li.classList.contains('completed');
+      }
+      if (checked) {
+        li.classList.add('completed');
+        li.querySelector('input[type=checkbox]').checked = true;
+      } else {
+        li.classList.remove('completed');
+        li.querySelector('input[type=checkbox]').checked = false;
+      }
+      const accordionItem = li.closest('.accordion-item');
+      if (accordionItem) {
+        if (accordionItem.classList.contains('completed') && !checked) {
+          accordionItem.classList.remove('completed');
+          const cb = accordionItem.querySelector('.minimal-accordion-checkbox');
+          if (cb) cb.checked = false;
+        }
+        updateProgressBar(accordionItem);
+      }
+    }
+    function initAddTaskForm(form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = form.querySelector('input[type=text]');
+        const val = input.value.trim();
+        if (!val) return;
+        const list = document.getElementById(form.dataset.list);
+        const newTaskId = 'task-' + Date.now();
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex align-items-center';
+        li.dataset.id = newTaskId;
+        li.innerHTML = `
+          <i class="bi bi-grip-vertical drag-handle-task" title="Перетащите, чтобы изменить порядок"></i>
+          <input type="checkbox" id="${newTaskId}" />
+          <label for="${newTaskId}" class="mb-0 flex-grow-1 ms-2">${val}</label>
+          <i class="bi bi-check-circle-fill todo-icon"></i>
+          <button class="task-done-button" title="Отметить как выполненную">Готово</button>
+          <div class="task-controls">
+            <i class="bi bi-pencil-fill edit-task" title="Редактировать"></i>
+            <i class="bi bi-trash-fill delete-task" title="Удалить"></i>
+          </div>
+        `;
+        list.appendChild(li);
+        input.value = '';
+        input.focus();
+        const accordionItem = li.closest('.accordion-item');
+        if (accordionItem) updateProgressBar(accordionItem);
+        Sortable.create(list, {
+          handle: '.drag-handle-task',
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+        });
+      });
+    }
+    let nextAccordionId = 1;
+    function createAccordion(title, difficulty) {
+      const accordion = document.getElementById('accordionExample');
+      const newId = nextAccordionId++;
+      const headingId = 'heading' + newId;
+      const collapseId = 'collapse' + newId;
+      const listId = 'todoList' + newId;
+      const div = document.createElement('div');
+      div.className = 'accordion-item';
+      div.dataset.id = newId;
+      div.dataset.difficulty = difficulty;
+      div.innerHTML = `
+        <h2 class="accordion-header d-flex align-items-center" id="${headingId}">
+          <button class="accordion-button collapsed d-flex align-items-center flex-grow-1" type="button"
+            data-bs-toggle="collapse" data-bs-target="#${collapseId}"
+            aria-expanded="false" aria-controls="${collapseId}">
+            <input type="checkbox" class="minimal-accordion-checkbox me-2" title="Отметить список выполненным" />
+            <i class="bi bi-arrows-move drag-handle-accordion" title="Перетащите, чтобы изменить порядок"></i>
+            <span>${title} (сложность: ${difficulty})</span>
+          </button>
+          <button type="button" class="btn-delete-accordion" title="Удалить список">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </h2>
+        <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="progress mb-3" style="height: 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+            <ul class="todo-list list-group" id="${listId}"></ul>
+            <form class="add-task-form" data-list="${listId}" style="display:flex;">
+              <input type="text" placeholder="Новая задача" class="form-control" />
+              <button type="submit" class="btn btn-primary">Готово</button>
+            </form>
+          </div>
+        </div>
+      `;
+      accordion.appendChild(div);
+      initSortableAccordion();
+      Sortable.create(div.querySelector('.todo-list'), {
+        handle: '.drag-handle-task',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+      });
+      const form = div.querySelector('.add-task-form');
+      initAddTaskForm(form);
+      sortAccordions();
+    }
+    function sortAccordions() {
+      const accordion = document.getElementById('accordionExample');
+      const items = Array.from(accordion.querySelectorAll('.accordion-item'));
+      items.sort((a, b) => parseInt(a.dataset.difficulty) - parseInt(b.dataset.difficulty));
+      items.forEach(item => accordion.appendChild(item));
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      initSortableAccordion();
+    });
+    document.getElementById('btnAddTaskNav').addEventListener('click', () => {
+      const title = prompt('Введите название нового списка:');
+      if (!title) return;
+      let difficulty = prompt('Введите уровень сложности (1-5):', '1');
+      difficulty = parseInt(difficulty);
+      if (isNaN(difficulty) || difficulty < 1 || difficulty > 5) difficulty = 1;
+      createAccordion(title, difficulty);
+    });
+  </script>
+</body>
+</html>

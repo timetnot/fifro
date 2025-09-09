@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Личный кабинет</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #9873ae, #684d96);
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f4e6d3;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+    nav.navbar {
+      background-color: transparent !important;
+      box-shadow: none;
+      padding: 1rem 2rem;
+    }
+    nav.navbar .navbar-brand {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #f4e6d3 !important;
+      letter-spacing: 0.05em;
+    }
+    .profile-card {
+      background: #ffffffee;
+      max-width: 900px;
+      margin: auto;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 12px 25px rgba(136, 110, 163, 0.45);
+      color: #3b2a5a;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .profile-sidebar {
+      flex: 0 0 260px;
+      text-align: center;
+      padding-right: 2rem;
+      /* Removed border-right */
+    }
+    .profile-pic-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid #7d5da7;
+      cursor: pointer;
+      box-shadow: 0 0 12px #a67bdcaa;
+      transition: box-shadow 0.3s ease;
+    }
+    .profile-pic-container:hover {
+      box-shadow: 0 0 20px #8a74c7cc;
+    }
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      user-select: none;
+    }
+    .upload-hint {
+      font-size: 0.9rem;
+      color: #836ea3;
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .profile-info {
+      margin-top: 1.5rem;
+    }
+    .profile-info input {
+      width: 100%;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #3b2a5a;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      outline-offset: 4px;
+      transition: border-color 0.25s ease-in-out;
+      text-align: center;
+      user-select: text;
+      padding: 0.1rem 0.4rem;
+      border-radius: 5px;
+    }
+    .profile-info input:focus {
+      border-color: #886ea3;
+      background-color: #f4e6d3;
+      color: #684d96;
+    }
+    .profile-info input::placeholder {
+      color: #a49db4;
+    }
+    .profile-info input.email-input {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-top: 0.4rem;
+      color: #6a5780;
+    }
+    .btn-logout {
+      margin-top: 2rem;
+      background-color: #886ea3;
+      border: none;
+      padding: 0.6rem 2.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 35px;
+      color: #f4e6d3;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 6px 12px rgba(136, 110, 163, 0.3);
+    }
+    .btn-logout:hover {
+      background-color: #7d5da7;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(125, 93, 167, 0.7);
+    }
+    .tasks-section {
+      flex: 1 1 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .task-block {
+      background: #e8dff5;
+      border-radius: 15px;
+      padding: 1.25rem 1.8rem;
+      box-shadow: 0 6px 12px rgba(136, 110, 163, 0.15);
+      overflow-y: auto;
+      max-height: 300px;
+    }
+    .task-block h4 {
+      color: #684d96;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #886ea3;
+      padding-bottom: 0.3rem;
+    }
+    .task-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .task-list li {
+      padding: 12px 16px;
+      background-color: #fff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      color: #5a3d81;
+      font-size: 1.05rem;
+      cursor: default;
+      box-shadow: 0 3px 6px rgba(136, 110, 163, 0.12);
+      transition: box-shadow 0.3s ease;
+    }
+    .task-list li.completed {
+      text-decoration: line-through;
+      color: #9a8fc1;
+      background-color: #d4cae9;
+      cursor: default;
+      box-shadow: none;
+    }
+    .task-list li:hover:not(.completed) {
+      box-shadow: 0 6px 14px rgba(125, 93, 167, 0.4);
+    }
+    @media (max-width: 767px) {
+      .profile-card {
+        flex-direction: column;
+        padding: 2rem;
+        border-radius: 15px;
+      }
+      .profile-sidebar {
+        border: none;
+        padding-right: 0;
+        margin-bottom: 2rem;
+      }
+      .tasks-section {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Vivro</a>
+    </div>
+  </nav>
+  <main class="profile-card" role="main">
+    <section class="profile-sidebar" aria-label="информация пользователя">
+      <label for="fileUpload" class="profile-pic-container" tabindex="0" title="кликните чтобы загрузить фото">
+        <img
+          src="https://via.placeholder.com/180?text=Фото"
+          alt="Фото профиля пользователя"
+          id="profileImage"
+          class="profile-pic"
+          aria-describedby="uploadHint"
+          draggable="false"
+        />
+      </label>
+      <input type="file" accept="image/*" id="fileUpload" aria-label="" />
+      <div class="upload-hint" id="uploadHint">нажмите на фото, чтобы загрузить</div>
+      <div class="profile-info">
+        <input
+          type="text"
+          id="profileName"
+          aria-label="Имя пользователя"
+          placeholder="Введите имя"
+          spellcheck="false"
+          autocomplete="off"/>
+        <input
+          type="email"
+          id="profileEmail"
+          class="email-input"
+          aria-label="Email пользователя"
+          placeholder="Введите email"
+          spellcheck="false"
+          autocomplete="off"
+        />
+      </div>
+      <button class="btn btn-logout" id="logoutBtn" aria-label="Выйти из личного кабинета">Выйти</button>
+    </section>
+    <section class="tasks-section" aria-label="Задачи пользователя">
+      <div class="task-block" aria-live="polite" aria-relevant="additions removals">
+        <h4>Выполненные задачи</h4>
+        <ul class="task-list" id="completedTasks" tabindex="0" aria-label="Список выполненных задач">
+        </ul>
+      </div>
+      <div class="task-block" aria-live="polite" aria-relevant="additions removals">
+        <h4>Предстоящие задачи</h4>
+        <ul class="task-list" id="pendingTasks" tabindex="0" aria-label="Список предстоящих задач">
+        </ul>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const profileImage = document.getElementById('profileImage');
+    const fileUpload = document.getElementById('fileUpload');
+    const profileNameEl = document.getElementById('profileName');
+    const profileEmailEl = document.getElementById('profileEmail');
+    const completedTasksList = document.getElementById('completedTasks');
+    const pendingTasksList = document.getElementById('pendingTasks');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userName = localStorage.getItem('userName') || '';
+    const userEmail = localStorage.getItem('userEmail') || '';
+    const userImage = localStorage.getItem('userImage') || '';
+
+    profileNameEl.value = userName;
+    profileEmailEl.value = userEmail;
+    if (userImage) {
+      profileImage.src = userImage;
+    }
+
+    const completedTasks = [
+      'Прочитать книгу по саморазвитию',
+      'Сделать утреннюю гимнастику',
+      'Отправить отчет на работу'
+    ];
+    const pendingTasks = [
+      'Записаться на курс по программированию',
+      'Подготовить презентацию',
+      'Купить продукты на неделю'
+    ];
+
+    function renderTasks() {
+      completedTasksList.innerHTML = '';
+      completedTasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        li.classList.add('completed');
+        completedTasksList.appendChild(li);
+      });
+
+      pendingTasksList.innerHTML = '';
+      pendingTasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        pendingTasksList.appendChild(li);
+      });
+    }
+    renderTasks();
+
+    document.querySelector('.profile-pic-container').addEventListener('click', () => {
+      fileUpload.click();
+    });
+    document.querySelector('.profile-pic-container').addEventListener('keypress', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        fileUpload.click();
+      }
+    });
+
+    fileUpload.addEventListener('change', () => {
+      const file = fileUpload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          profileImage.src = e.target.result;
+          localStorage.setItem('userImage', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    profileNameEl.addEventListener('blur', () => {
+      localStorage.setItem('userName', profileNameEl.value.trim());
+    });
+
+    profileEmailEl.addEventListener('blur', () => {
+      localStorage.setItem('userEmail', profileEmailEl.value.trim());
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('isRegistered');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userImage');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
