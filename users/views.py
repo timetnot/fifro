@@ -7,7 +7,6 @@ from django.conf import settings
 from .forms import RegisterForm, LoginForm
 import random
 
-# Временное хранилище кодов подтверждения
 confirmation_codes = {}
 
 def register_view(request):
@@ -24,7 +23,7 @@ def register_view(request):
 
             send_mail(
                 "Код подтверждения Vivro",
-                f"Ваш код подтверждения: {code}",
+                f"код подтверждения: {code}",
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
@@ -51,12 +50,12 @@ def confirm_code_view(request):
                 user.save()
                 confirmation_codes.pop(email, None)
                 request.session.pop("registration_email", None)
-                messages.success(request, "Регистрация подтверждена. Теперь вы можете войти.")
+                messages.success(request, "регистрация подтверждена. теперь вы можете войти.")
                 return redirect("users:login")
             else:
-                messages.error(request, "Пользователь не найден.")
+                messages.error(request, "пользователь не найден.")
         else:
-            messages.error(request, "Неверный код подтверждения.")
+            messages.error(request, "неверный код подтверждения.")
     return render(request, "users/confirm_code.html")
 
 def login_view(request):
@@ -65,15 +64,15 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            messages.success(request, f"Добро пожаловать, {user.username}!")
-            return redirect("index")  # замените на нужный путь
+            messages.success(request, f"добро пожаловать, {user.username}!")
+            return redirect("index") 
         else:
-            messages.error(request, "Неверное имя пользователя или пароль.")
+            messages.error(request, "неверное имя пользователя или пароль.")
     else:
         form = LoginForm()
     return render(request, "users/login.html", {"form": form})
 
 def logout_view(request):
     logout(request)
-    messages.info(request, "Вы вышли из системы.")
+    messages.info(request, "вы вышли из системы.")
     return redirect("index")
